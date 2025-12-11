@@ -19,7 +19,7 @@ pipeline {
                      sh '''
                      curl -sS https://install.python-poetry.org | python3
                      export PATH="$HOME/.local/bin:$PATH"
-                     pip install --upgrade pip
+                     pip3 install --upgrade pip
                      pip install -r requirements.txt
                      '''
                 }
