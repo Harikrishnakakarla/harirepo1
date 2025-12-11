@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         PROJECT_ID = 'handy-sensor-475806-n3'
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('jenkins-test-project2')  // Service account credential
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('test-gcp-jen')  // Service account credential
     }
 
     stages {
