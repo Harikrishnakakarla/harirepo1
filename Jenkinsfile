@@ -49,19 +49,15 @@ pipeline {
 
         stage("Deploy to Google App Engine") {
             steps {
-                sh '''
-                    # Check gcloud installation
-                    gcloud --version
+                // Authenticate with Google Cloud
+                    sh 'gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}'
 
-                    # Authenticate using service account
-                    gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                    // Set the GCP project
+                    sh 'gcloud config set project $PROJECT_ID'
 
-                    # Set project
-                    gcloud config set project $PROJECT_ID
-
-                    # Deploy to App Engine
-                    gcloud app deploy --bucket=gs://avian-chariot-450105-deployments --quiet
-                '''
+                    // Deploy the application to App Engine
+                    sh 'gcloud app deploy --bucket=gs://avian-chariot-450105-deployments --quiet'
+                
             }
         }
     }
