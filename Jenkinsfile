@@ -14,7 +14,7 @@ pipeline {
             }
         }
 
-        stage("Setup Python Environment") {
+ stage("Setup Python Environment") {
     steps {
         sh '''
             python3 -m venv venv
@@ -22,13 +22,14 @@ pipeline {
 
             pip install --upgrade pip
 
-            curl -sSL https://install.python-poetry.org | python3
             export PATH="$HOME/.local/bin:$PATH"
-
-            pip install -r requirements.txt
+            
+            # Install dependencies via Poetry
+            poetry install
         '''
     }
 }
+
 
 
 
