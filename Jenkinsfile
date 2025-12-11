@@ -17,21 +17,19 @@ pipeline {
         stage("Setup Python Environment") {
     steps {
         sh '''
-#!/bin/bash
-set -e
+            python3 -m venv venv
+            . venv/bin/activate
 
-python3 -m venv venv
-source venv/bin/activate
+            pip install --upgrade pip
 
-pip install --upgrade pip
+            curl -sSL https://install.python-poetry.org | python3
+            export PATH="$HOME/.local/bin:$PATH"
 
-curl -sSL https://install.python-poetry.org | python3
-export PATH="$HOME/.local/bin:$PATH"
-
-pip install -r requirements.txt
+            pip install -r requirements.txt
         '''
     }
 }
+
 
 
         stage("Run Tests") {
