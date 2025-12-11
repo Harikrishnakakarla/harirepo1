@@ -1,3 +1,7 @@
-runtime: python27  # Correct runtime for Python 3.9
-env: standard
-entrypoint: gunicorn -b :$PORT main:app  # This runs your app using Gunicorn
+runtime: python39
+
+entrypoint: gunicorn -b :$PORT app:app
+
+handlers:
+- url: /.*
+  script: auto
