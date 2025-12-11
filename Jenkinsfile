@@ -14,25 +14,21 @@ pipeline {
             }
         }
 
-        stage("Setup Python & Install Dependencies") {
+        stage("Setup Python Environment") {
             steps {
                 sh '''
-                    # Install Python tools (safe for Debian)
-                    sudo apt update
-                    sudo apt install -y python3-full
-
-                    # Create Virtual Environment
+                    # Create virtual environment
                     python3 -m venv venv
                     source venv/bin/activate
 
-                    # Install pip safely
+                    # Upgrade pip
                     pip install --upgrade pip
 
                     # Install Poetry
                     curl -sSL https://install.python-poetry.org | python3
                     export PATH="$HOME/.local/bin:$PATH"
 
-                    # Install project dependencies
+                    # Install dependencies
                     pip install -r requirements.txt
                 '''
             }
@@ -49,31 +45,21 @@ pipeline {
 
         stage("Deploy to Google App Engine") {
             steps {
-                // Authenticate with Google Cloud
-                    sh 'gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}'
+                sh '''
+                    gcloud --version
 
-                    // Set the GCP project
-                    sh 'gcloud config set project $PROJECT_ID'
+                    gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                    gcloud config set project $PROJECT_ID
 
-                    // Deploy the application to App Engine
-                    sh 'gcloud app deploy --bucket=gs://avian-chariot-450105-deployments --quiet'
-                
+                    gcloud app deploy --bucket=gs://avian-chariot-450105-deployments --quiet
+                '''
             }
         }
     }
 
     post {
         always {
-            echo 'Cleaning up...'
             cleanWs()
-        }
-
-        success {
-            echo 'Deployment successful!'
-        }
-
-        failure {
-            echo 'Deployment failed!'
         }
     }
 }
